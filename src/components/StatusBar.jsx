@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Battery, Wifi, Signal } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Wifi, Battery } from 'lucide-react';
 
 export default function StatusBar() {
-  const [time, setTime] = useState(new Date());
+  const [timeStr, setTimeStr] = useState("");
 
   useEffect(() => {
-    const t = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(t);
+    const update = () => {
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      setTimeStr(`${hh}:${mm}`);
+    };
+    update();
+    const id = setInterval(update, 1000 * 30);
+    return () => clearInterval(id);
   }, []);
 
-  const timeStr = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
   return (
-    <div className="flex items-center justify-between px-4 py-2 text-white/90">
-      <div className="text-sm font-medium tracking-wide">{timeStr}</div>
-      <div className="flex items-center gap-2">
-        <Signal size={16} />
-        <Wifi size={16} />
-        <Battery size={16} />
+    <div className="fixed top-0 left-0 right-0 z-40 h-12 px-4 flex items-center justify-between bg-gradient-to-b from-black/50 to-transparent text-white">
+      <div className="font-medium tracking-wide">{timeStr}</div>
+      <div className="flex items-center gap-3 text-white/80">
+        <Wifi className="w-5 h-5" />
+        <Battery className="w-5 h-5" />
       </div>
     </div>
   );

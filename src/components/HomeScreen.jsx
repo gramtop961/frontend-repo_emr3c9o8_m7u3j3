@@ -1,48 +1,37 @@
-import React from 'react';
-import { Phone, MessageSquare, Camera, Settings, Clock, Calculator, FileText } from 'lucide-react';
-import AppIcon from './AppIcon';
+import { Calendar, Camera, Clock, Cog, FileText, Calculator as CalcIcon } from 'lucide-react';
+import AppIcon from './AppIcon.jsx';
 
-export default function HomeScreen({ onOpen }) {
-  const apps = [
-    { label: 'Phone', icon: Phone, action: () => alert('Dialer mock: not implemented') },
-    { label: 'Messages', icon: MessageSquare, action: () => alert('Messages mock: not implemented') },
-    { label: 'Camera', icon: Camera, action: () => alert('Camera mock: not implemented') },
-    { label: 'Settings', icon: Settings, action: () => alert('Settings mock: not implemented') },
-    { label: 'Clock', icon: Clock, action: () => onOpen('Clock') },
-    { label: 'Calculator', icon: Calculator, action: () => onOpen('Calculator') },
-    { label: 'Notes', icon: FileText, action: () => onOpen('Notes') },
-  ];
+export default function HomeScreen({ onOpenApp }) {
+  const now = new Date();
+  const day = now.toLocaleDateString(undefined, { weekday: 'long' });
+  const date = now.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {/* Wallpaper */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500" />
-      {/* Subtle vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(transparent,rgba(0,0,0,0.25))]" />
+    <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 bg-[radial-gradient(50%_50%_at_50%_0%,rgba(59,130,246,0.25),rgba(16,185,129,0.2)_60%,transparent)]" />
+      <div className="absolute inset-0 bg-[conic-gradient(at_50%_120%,rgba(255,255,255,0.06),transparent_30%)]" />
 
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Widgets area */}
-        <div className="px-6 pt-14">{/* pad for status bar */}
-          <div className="rounded-3xl p-4 bg-white/10 backdrop-blur text-white shadow-sm">
-            <div className="text-sm opacity-80">Weather</div>
-            <div className="text-xl font-semibold">72°F • Sunny</div>
+      <div className="relative h-full w-full flex flex-col pt-14 pb-24 px-4">
+        <div className="flex items-center justify-between text-white/90 mb-6">
+          <div className="text-left">
+            <div className="text-2xl font-semibold">{day}</div>
+            <div className="text-sm text-white/70">{date}</div>
           </div>
+          <Calendar className="w-6 h-6" />
         </div>
 
-        {/* App grid */}
-        <div className="flex-1 grid grid-cols-4 gap-4 px-6 py-6 place-content-start">
-          {apps.map((app) => (
-            <AppIcon key={app.label} icon={app.icon} label={app.label} onClick={app.action} />)
-          )}
+        <div className="grid grid-cols-4 gap-4 flex-1 content-start">
+          <AppIcon label="Clock" icon={<Clock className="w-5 h-5" />} onClick={() => onOpenApp('Clock')} />
+          <AppIcon label="Calculator" icon={<CalcIcon className="w-5 h-5" />} onClick={() => onOpenApp('Calculator')} />
+          <AppIcon label="Notes" icon={<FileText className="w-5 h-5" />} onClick={() => onOpenApp('Notes')} />
+          <AppIcon label="Camera" icon={<Camera className="w-5 h-5" />} onClick={() => onOpenApp('Camera')} />
+          <AppIcon label="Settings" icon={<Cog className="w-5 h-5" />} onClick={() => onOpenApp('Settings')} />
         </div>
 
-        {/* Dock */}
-        <div className="px-10 pb-20">{/* pad for nav bar */}
-          <div className="mx-auto max-w-[22rem] rounded-3xl bg-black/30 backdrop-blur flex items-center justify-around py-3 text-white">
-            <AppIcon icon={Phone} label="Phone" onClick={() => alert('Dialer mock: not implemented')} />
-            <AppIcon icon={MessageSquare} label="Messages" onClick={() => alert('Messages mock: not implemented')} />
-            <AppIcon icon={Camera} label="Camera" onClick={() => alert('Camera mock: not implemented')} />
-            <AppIcon icon={Settings} label="Settings" onClick={() => alert('Settings mock: not implemented')} />
+        <div className="mt-6">
+          <div className="mx-auto max-w-sm bg-white/5 border border-white/10 rounded-2xl p-4 text-white/80">
+            <div className="text-sm">Tip</div>
+            <div className="text-xs text-white/60">Use the bottom buttons for Back, Home, and Recents. You can close items from Recents.</div>
           </div>
         </div>
       </div>

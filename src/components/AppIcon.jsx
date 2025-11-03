@@ -1,15 +1,13 @@
-import React from 'react';
-
-export default function AppIcon({ icon: Icon, label, onClick }) {
+export default function AppIcon({ icon, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white/10 active:scale-95 transition"
+      className="flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 hover:bg-white/10 active:bg-white/20 border border-white/10 transition-colors"
     >
-      <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-white shadow-inner">
-        <Icon size={28} />
+      <div className="w-10 h-10 grid place-items-center rounded-lg bg-gradient-to-br from-white/20 to-white/5 text-white">
+        {icon}
       </div>
-      <span className="text-[11px] text-white/90">{label}</span>
+      <span className="text-xs text-white/90">{label}</span>
     </button>
   );
 }
