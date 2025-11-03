@@ -141,7 +141,7 @@ export default function AppWindow({ app, onClose }) {
   };
 
   return (
-    <div className="absolute inset-0 z-20 flex flex-col rounded-[2.5rem] overflow-hidden">
+    <div className="absolute inset-0 z-30 flex flex-col overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur border-b border-white/10">
         <div className="text-white font-medium">{app}</div>
         <button onClick={onClose} className="text-white/80 hover:text-white px-3 py-1 rounded-full bg-white/10">Close</button>

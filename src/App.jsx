@@ -1,22 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import HomeScreen from './components/HomeScreen';
 import AppWindow from './components/AppWindow';
 import NavigationBar from './components/NavigationBar';
 import StatusBar from './components/StatusBar';
-
-function PhoneFrame({ children }) {
-  return (
-    <div className="relative w-[360px] h-[740px] rounded-[3rem] shadow-2xl border border-black/30 overflow-hidden bg-black">
-      {/* Glass edge */}
-      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(255,255,255,0.2)] rounded-[3rem]" />
-      {/* Notch */}
-      <div className="absolute top-0 inset-x-0 flex justify-center pt-2 z-30">
-        <div className="h-6 w-40 bg-black rounded-b-3xl" />
-      </div>
-      {children}
-    </div>
-  );
-}
 
 export default function App() {
   const [currentApp, setCurrentApp] = useState(null);
@@ -25,7 +11,8 @@ export default function App() {
 
   const openApp = (name) => {
     setCurrentApp(name);
-    setRecents((r) => [name, ...r.filter((x) => x !== name)].slice(0, 6));
+    setRecents((r) => [name, ...r.filter((x) => x !== name)].slice(0, 8));
+    setShowRecents(false);
   };
 
   const goHome = () => {
@@ -44,50 +31,47 @@ export default function App() {
   const toggleRecents = () => setShowRecents((v) => !v);
 
   const RecentCard = ({ name }) => (
-    <div
+    <button
       onClick={() => {
         openApp(name);
-        setShowRecents(false);
       }}
-      className="rounded-2xl bg-white/10 backdrop-blur p-4 text-white cursor-pointer hover:bg-white/20 transition"
+      className="rounded-2xl bg-white/10 backdrop-blur p-4 text-white cursor-pointer hover:bg-white/20 transition text-left"
     >
-      <div className="text-sm opacity-80">App</div>
-      <div className="text-xl font-semibold">{name}</div>
-    </div>
+      <div className="text-xs opacity-70">App</div>
+      <div className="text-lg font-semibold">{name}</div>
+    </button>
   );
 
   return (
-    <div className="min-h-screen w-full bg-neutral-100 flex items-center justify-center p-6">
-      <PhoneFrame>
-        {/* Wallpapered Home */}
-        <HomeScreen onOpen={openApp} />
+    <div className="min-h-screen w-full relative overflow-hidden bg-black">
+      {/* Wallpaper lives on the HomeScreen behind everything */}
+      <HomeScreen onOpen={openApp} />
 
-        {/* Running App Window */}
-        {currentApp && (
-          <AppWindow app={currentApp} onClose={() => setCurrentApp(null)} />
-        )}
+      {/* Running App Window */}
+      {currentApp && (
+        <AppWindow app={currentApp} onClose={() => setCurrentApp(null)} />
+      )}
 
-        {/* Recents overlay */}
-        {showRecents && (
-          <div className="absolute inset-0 z-30 p-4 grid grid-cols-2 gap-4 bg-black/40 backdrop-blur">
-            {recents.length === 0 ? (
-              <div className="col-span-2 flex items-center justify-center text-white/80">No recent apps</div>
-            ) : (
-              recents.map((r, i) => <RecentCard name={r} key={r + i} />)
-            )}
-          </div>
-        )}
-
-        {/* StatusBar duplicated for top overlay when app open to mimic Android */}
-        <div className="absolute top-0 left-0 right-0 z-40">
-          <StatusBar />
+      {/* Recents overlay */}
+      {showRecents && (
+        <div className="absolute inset-0 z-40 p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 bg-black/50 backdrop-blur">
+          {recents.length === 0 ? (
+            <div className="col-span-full flex items-center justify-center text-white/80">No recent apps</div>
+          ) : (
+            recents.map((r, i) => <RecentCard name={r} key={r + i} />)
+          )}
         </div>
+      )}
 
-        {/* Navigation bar */}
-        <div className="absolute bottom-0 left-0 right-0 z-40">
-          <NavigationBar onBack={goBack} onHome={goHome} onRecents={toggleRecents} />
-        </div>
-      </PhoneFrame>
+      {/* Global status bar */}
+      <div className="absolute top-0 left-0 right-0 z-50">
+        <StatusBar />
+      </div>
+
+      {/* System navigation */}
+      <div className="absolute bottom-0 left-0 right-0 z-50">
+        <NavigationBar onBack={goBack} onHome={goHome} onRecents={toggleRecents} />
+      </div>
     </div>
   );
 }
